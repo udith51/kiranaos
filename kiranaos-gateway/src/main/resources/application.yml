@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: kiranaos-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: auth-service
+          uri: lb://kiranaos-auth-service
+          predicates:
+            - Path=/api/v1/auth/**
+
+        - id: store-service
+          uri: lb://kiranaos-store-service
+          predicates:
+            - Path=/api/v1/store/**
+
+        - id: billing-service
+          uri: lb://kiranaos-billing-service
+          predicates:
+            - Path=/api/v1/bills/**
+
+        - id: analytics-service
+          uri: lb://kiranaos-analytics-service
+          predicates:
+            - Path=/api/v1/analytics/**
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
+
