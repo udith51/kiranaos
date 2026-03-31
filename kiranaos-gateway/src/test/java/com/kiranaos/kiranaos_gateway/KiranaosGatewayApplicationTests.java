@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class KiranaosGatewayApplicationTests {
@@ -17,7 +17,7 @@ class KiranaosGatewayApplicationTests {
 	}
 
 	@Test
-	void gatewayPortShouldBe8080(){
-		assertEquals(8080, port);
+	void gatewayPortShouldBeAssigned(){
+		assertTrue(port > 0);
 	}
 }
