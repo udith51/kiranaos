@@ -73,12 +73,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: SonarCloud — Discovery
-        working-directory: kiranaos-discovery
-        run: mvn verify sonar:sonar -Dsonar.login=${{ secrets.SONAR_TOKEN }} -B
-
-      - name: SonarCloud — Gateway
-        working-directory: kiranaos-gateway
+      - name: SonarCloud Analysis (Root)
         run: mvn verify sonar:sonar -Dsonar.login=${{ secrets.SONAR_TOKEN }} -B
 
   # ─────────────────────────────────────────
