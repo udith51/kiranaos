@@ -41,7 +41,6 @@
 
         <!-- Whitespace -->
         <module name="WhitespaceAround"/>
-        <module name="NoWhitespaceAtEndOfLine"/>
 
     </module>
 
