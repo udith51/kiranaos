@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class KiranaosGatewayApplication {
 
 	public static void main(String[] args) {
-		int A=10;
 		SpringApplication.run(KiranaosGatewayApplication.class, args);
 	}
 
