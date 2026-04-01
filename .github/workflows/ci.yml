@@ -98,10 +98,13 @@ jobs:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
 
       - name: OWASP Dependency Check
-        run: mvn dependency-check:check \
-          -Dnvd.api.key=${{ secrets.NVD_API_KEY }} \
-          -Dnvd.maxRetryCount=5 \
-          -B
+        run: |
+          mvn dependency-check:check \
+            -Dnvd.api.key=$NVD_API_KEY \
+            -Dnvd.maxRetryCount=5 \
+            -B
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
 
   # ─────────────────────────────────────────
   # JOB 3 — only runs on push to main
