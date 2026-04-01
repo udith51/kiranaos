@@ -92,7 +92,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Debug API Key
-        run:
+        run: |
           echo "Key length: ${#NVD_API_KEY}"
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
