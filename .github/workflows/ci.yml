@@ -92,7 +92,7 @@ jobs:
           distribution: 'temurin'
 
       - name: OWASP Dependency Check
-        run: mvn dependency-check:check -B
+        run: mvn dependency-check:check -Dnvd.apiKey=${{ secrets.NVD_API_KEY }} -B
 
   # ─────────────────────────────────────────
   # JOB 3 — only runs on push to main
