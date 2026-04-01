@@ -91,10 +91,17 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: OWASP Dependency Check
-        run: mvn dependency-check:check -B
+      - name: Debug API Key
+        run:
+          echo "Key length: ${#NVD_API_KEY}"
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+
+      - name: OWASP Dependency Check
+        run: mvn dependency-check:check \
+          -Dnvd.api.key=${{ secrets.NVD_API_KEY }} \
+          -Dnvd.maxRetryCount=5 \
+          -B
 
   # ─────────────────────────────────────────
   # JOB 3 — only runs on push to main
