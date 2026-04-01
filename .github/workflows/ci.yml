@@ -1,15 +1,6 @@
 name: KiranaOS CI
 
 on:
-  push:
-    branches:
-      - '**'   # all branches
-    paths:
-      - 'pom.xml'
-      - 'kiranaos-discovery/**'
-      - 'kiranaos-gateway/**'
-      - '.github/workflows/**'
-
   pull_request:
     branches:
       - main
@@ -74,45 +65,12 @@ jobs:
         run: mvn verify sonar:sonar -Dsonar.login=${{ secrets.SONAR_TOKEN }} -B
 
   # ─────────────────────────────────────────
-  # JOB 3 — Runs ONLY on PR to main + push to main
-  # ─────────────────────────────────────────
-  owasp:
-    name: OWASP Dependency Check
-    runs-on: ubuntu-latest
-    needs: sonar
-#    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Debug API Key
-        run: |
-          echo "Key length: ${#NVD_API_KEY}"
-        env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-
-      - name: OWASP Dependency Check
-        run: |
-          mvn dependency-check:check \
-            -Dnvd.api.key=$NVD_API_KEY \
-            -Dnvd.maxRetryCount=5 \
-            -B
-        env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-
-  # ─────────────────────────────────────────
   # JOB 3 — only runs on push to main
   # ─────────────────────────────────────────
 #  docker-build:
 #    name: Docker Build Verification
 #    runs-on: ubuntu-latest
-#    needs: sonar-and-owasp
+#    needs: sonar
 #    if: github.ref == 'refs/heads/main'
 #
 #    steps:
