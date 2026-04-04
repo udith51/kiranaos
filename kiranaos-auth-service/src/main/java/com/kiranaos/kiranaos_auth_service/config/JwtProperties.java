@@ -2,11 +2,11 @@ package com.kiranaos.kiranaos_auth_service.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 @ConfigurationProperties("jwt")
-@CommonsLog
+@Component
 @Setter @Getter
 public class JwtProperties {
     private String secret;

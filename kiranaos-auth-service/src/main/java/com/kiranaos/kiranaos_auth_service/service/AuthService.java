@@ -68,6 +68,10 @@ public class AuthService {
                 .build();
     }
 
+    // When access token expires, refresh token is passed as input.
+    // Refresh token is hashed and then searched in repo.
+    // If not found, or revoked or expired -> Exception
+    // Once found, revoke it, as we will generate a new pair of access token & refresh token for that user
     public AuthResponse refresh(RefreshTokenRequest refreshTokenRequest) {
         String tokenHash = jwtService.hashToken(refreshTokenRequest.getRefreshToken());
         RefreshToken stored = refreshTokenRepository.findByTokenHash(tokenHash)

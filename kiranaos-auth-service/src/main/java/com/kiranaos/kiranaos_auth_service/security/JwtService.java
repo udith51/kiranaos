@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -15,10 +16,13 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
+@Service
 @RequiredArgsConstructor
 public class JwtService {
 
     private final JwtProperties jwtProperties;
+
+    // Signing for access token
     private SecretKey getSigningKey(){
         byte[] keyBytes=jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
@@ -38,16 +42,18 @@ public class JwtService {
         return UUID.randomUUID().toString();
     }
 
+    // hashing the refresh token before saving to db
     public String hashToken(String token){
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashBytes = digest.digest(token.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(hashBytes);
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");// define algo
+            byte[] hashBytes = digest.digest(token.getBytes(StandardCharsets.UTF_8));// apply algo on defined token in byte format
+            return Base64.getEncoder().encodeToString(hashBytes);// encodes to string and returns
         }catch (NoSuchAlgorithmException e){
             throw new RuntimeException("SHA-256 algorithm not found: "+e);
         }
     }
 
+    // Extract everything stored in access token
     public Claims extractAllClaims(String accessToken){
         return Jwts.parser()
                 .verifyWith(getSigningKey())
