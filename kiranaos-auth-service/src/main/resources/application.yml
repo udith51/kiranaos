@@ -6,9 +6,9 @@ spring:
     name: kiranaos-auth-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/mydatabase
-    username: myuser
-    password: mypassword
+    url: jdbc:postgresql://db.shtsascslrhehnisitvl.supabase.co:5432/postgres?sslmode=require
+    username: postgres
+    password: lbTEnRvbS2teSk3R
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
