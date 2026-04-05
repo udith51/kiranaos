@@ -1,22 +1,20 @@
 name: KiranaOS CI
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
-    paths:
-      - 'pom.xml'
-      - 'kiranaos-discovery/**'
-      - 'kiranaos-gateway/**'
-      - '.github/workflows/**'
 
 jobs:
 
   # ─────────────────────────────────────────
-  # JOB 1 — Runs on ALL commits + PR + main
+  # JOB 1 — Build + Test all modules
   # ─────────────────────────────────────────
   build-and-test:
-    name: Build, Checkstyle & Test
+    name: Build & Test
     runs-on: ubuntu-latest
 
     steps:
@@ -32,22 +30,36 @@ jobs:
       - name: Build & Test (All modules)
         run: mvn clean verify -B
 
-      - name: Upload Coverage Reports
+      - name: Upload target directories
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-reports
+          name: build-artifacts
           path: |
-            kiranaos-discovery/target/site/jacoco/
-            kiranaos-gateway/target/site/jacoco/
+            kiranaos-discovery/target/
+            kiranaos-gateway/target/
+            kiranaos-auth-service/target/
+            kiranaos-store-service/target/
+            kiranaos-billing-service/target/
+            kiranaos-analytics-service/target/
 
   # ─────────────────────────────────────────
-  # JOB 2 — Runs ONLY on PR to main + push to main
+  # JOB 2 — Sonar per service independently
   # ─────────────────────────────────────────
   sonar:
-    name: SonarCloud Analysis
+    name: SonarCloud — ${{ matrix.service }}
     runs-on: ubuntu-latest
     needs: build-and-test
-#    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    strategy:
+      matrix:
+        service:
+          - kiranaos-discovery
+          - kiranaos-gateway
+          - kiranaos-auth-service
+#          - kiranaos-store-service
+#          - kiranaos-billing-service
+#          - kiranaos-analytics-service
 
     steps:
       - uses: actions/checkout@v4
@@ -61,8 +73,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: SonarCloud Analysis (Root)
-        run: mvn verify sonar:sonar -Dsonar.login=${{ secrets.SONAR_TOKEN }} -B
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: SonarCloud Analysis — ${{ matrix.service }}
+        working-directory: ${{ matrix.service }}
+        run: mvn sonar:sonar -Dsonar.login=${{ secrets.SONAR_TOKEN }} -B
 
   # ─────────────────────────────────────────
   # JOB 3 — only runs on push to main
