@@ -49,6 +49,7 @@ jobs:
     name: SonarCloud — ${{ matrix.service }}
     runs-on: ubuntu-latest
     needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     strategy:
       matrix:
