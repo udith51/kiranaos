@@ -8,12 +8,14 @@ import lombok.Setter;
 
 @Getter @Setter
 public class RegisterRequest {
+    private static final int PASSWORD_MIN_LENGTH = 8;
+    private static final int PASSWORD_MAX_LENGTH = 72;
 
     @Email
     @NotBlank
     private String email;
 
     @NotBlank
-    @Size(min = 8, max = 72)
+    @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
     private String password;
 }
