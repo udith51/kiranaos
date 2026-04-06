@@ -18,6 +18,11 @@ public class GlobalExceptionHandler {
         return buildError(HttpStatus.CONFLICT, e.getMessage());
     }
 
+    @ExceptionHandler(StoreNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleStoreNotFoundException(StoreNotFoundException e) {
+        return buildError(HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationError(MethodArgumentNotValidException ex) {
         Map<String, Object> errors = new HashMap<>();
