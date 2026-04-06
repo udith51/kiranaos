@@ -5,9 +5,9 @@ spring:
   application:
     name: kiranaos-store-service
   datasource:
-    url: url
-    username: username
-    password:
+    url: jdbc:postgresql://db.shtsascslrhehnisitvl.supabase.co:5432/postgres?sslmode=require
+    username: postgres
+    password: lbTEnRvbS2teSk3R
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
