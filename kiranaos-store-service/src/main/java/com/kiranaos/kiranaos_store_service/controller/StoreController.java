@@ -1,7 +1,9 @@
 package com.kiranaos.kiranaos_store_service.controller;
 
 import com.kiranaos.kiranaos_store_service.dto.request.CreateStoreRequest;
+import com.kiranaos.kiranaos_store_service.dto.request.UpdateReceiptConfigRequest;
 import com.kiranaos.kiranaos_store_service.dto.request.UpdateStoreRequest;
+import com.kiranaos.kiranaos_store_service.dto.response.ReceiptConfigResponse;
 import com.kiranaos.kiranaos_store_service.dto.response.StoreResponse;
 import com.kiranaos.kiranaos_store_service.service.StoreService;
 import jakarta.validation.Valid;
@@ -34,6 +36,17 @@ public class StoreController {
     public ResponseEntity<StoreResponse> updateStore(@RequestHeader("X-Owner-Id") UUID ownerId,
                                                      @RequestBody UpdateStoreRequest updateStoreRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(storeService.updateStore(ownerId, updateStoreRequest));
+    }
+
+    @GetMapping("/receipt-config")
+    public ResponseEntity<ReceiptConfigResponse> getReceiptConfig(@RequestHeader("X-Owner-Id") UUID ownerId) {
+        return ResponseEntity.status(HttpStatus.OK).body(storeService.getReceiptConfig(ownerId));
+    }
+
+    @PutMapping("/receipt-config")
+    public ResponseEntity<ReceiptConfigResponse> updateReceiptConfig(@RequestHeader("X-Owner-Id") UUID id,
+                                                                     @RequestBody UpdateReceiptConfigRequest updateReceiptConfigRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(storeService.updateReceiptConfig(id, updateReceiptConfigRequest));
     }
 
 }
