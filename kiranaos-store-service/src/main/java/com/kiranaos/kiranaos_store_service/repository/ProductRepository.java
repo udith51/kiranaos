@@ -12,11 +12,11 @@ import java.util.UUID;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID> {
-    Optional<Product> findByIdAndStore__Id(UUID id, UUID storeId);
+    Optional<Product> findByIdAndStoreId(UUID id, UUID storeId);
 
-    List<Product> findAllByStore__IdAndIsDeletedFalse(UUID storeId);
+    List<Product> findAllByStoreIdAndIsDeletedFalse(UUID storeId);
 
-    List<Product> findAllByStore__IdAndCategoryAndIsDeletedFalse(UUID storeId, String category);
+    List<Product> findAllByStoreIdAndCategoryAndIsDeletedFalse(UUID storeId, String category);
 
     @Query("SELECT p FROM Product p WHERE p.store.id = :storeId AND p.isDeleted = false AND p.stockQuantity<p.reorderThreshold")
     List<Product> findLowStockProducts(@Param("storeId") UUID storeId);

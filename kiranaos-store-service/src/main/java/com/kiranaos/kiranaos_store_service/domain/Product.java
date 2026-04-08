@@ -39,6 +39,9 @@ public class Product {
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
+    @Column(name = "store_id", insertable = false, updatable = false)
+    private UUID storeId;
+
     private String category;
 
     @Enumerated(EnumType.STRING)

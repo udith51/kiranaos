@@ -23,6 +23,8 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class Store {
+    private static final BigDecimal DEFAULT_GST_RATE = BigDecimal.valueOf(5.00);
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -42,7 +44,7 @@ public class Store {
     private String receiptFooter;
 
     @Column(nullable = false)
-    private BigDecimal defaultGstRate = BigDecimal.valueOf(5.0);
+    private BigDecimal defaultGstRate = DEFAULT_GST_RATE;
 
     @Column(nullable = false)
     private Boolean showGstBreakdown = true;
