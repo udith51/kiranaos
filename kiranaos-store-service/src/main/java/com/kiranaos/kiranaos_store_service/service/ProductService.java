@@ -45,7 +45,7 @@ public class ProductService {
 
     public List<ProductResponse> getProducts(UUID ownerId) {
         Store store = storeService.findStoreByOwnerId(ownerId);
-        List<Product> products=productRepository.findAllByStore_IdAndIsDeletedFalse(store.getId());
+        List<Product> products = productRepository.findAllByStore_IdAndIsDeletedFalse(store.getId());
         return products.stream().map(this::toProductResponse).toList();
     }
 
@@ -53,25 +53,25 @@ public class ProductService {
         Store store = storeService.findStoreByOwnerId(ownerId);
         Product product = productRepository.findByIdAndStore_Id(productId, store.getId())
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
-        if(request.getName()!=null) {
+        if (request.getName() != null) {
             product.setName(request.getName());
         }
-        if(request.getCategory()!=null) {
+        if (request.getCategory() != null) {
             product.setCategory(request.getCategory());
         }
-        if(request.getUnit()!=null) {
+        if (request.getUnit() != null) {
             product.setUnit(request.getUnit());
         }
-        if(request.getPrice()!=null) {
+        if (request.getPrice() != null) {
             product.setPrice(request.getPrice());
         }
-        if(request.getGstRate()!=null) {
+        if (request.getGstRate() != null) {
             product.setGstRate(request.getGstRate());
         }
-        if(request.getStockQuantity()!=null) {
+        if (request.getStockQuantity() != null) {
             product.setStockQuantity(request.getStockQuantity());
         }
-        if(request.getReorderThreshold()!=null) {
+        if (request.getReorderThreshold() != null) {
             product.setReorderThreshold(request.getReorderThreshold());
         }
         return toProductResponse(productRepository.save(product));
@@ -79,11 +79,17 @@ public class ProductService {
 
     public MessageResponse deleteProduct(UUID productId, UUID ownerId) {
         Store store = storeService.findStoreByOwnerId(ownerId);
-        Product product=productRepository.findByIdAndStore_Id(productId,store.getId())
+        Product product = productRepository.findByIdAndStore_Id(productId, store.getId())
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
         product.setIsDeleted(true);
         productRepository.save(product);
         return new MessageResponse("Product deleted!");
+    }
+
+    public List<ProductResponse> getProductsByCategory(UUID ownerId, String category) {
+        Store store = storeService.findStoreByOwnerId(ownerId);
+        List<Product> products = productRepository.findAllByStore_IdAndCategoryAndIsDeletedFalse(store.getId(), category);
+        return products.stream().map(this::toProductResponse).toList();
     }
 
     private ProductResponse toProductResponse(Product product) {
