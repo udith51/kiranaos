@@ -63,4 +63,9 @@ public class ProductController {
                                                                           @RequestHeader("X-Owner-Id") UUID ownerId) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.getProductsByCategory(ownerId, category));
     }
+
+    @GetMapping("/low-stock")
+    public ResponseEntity<List<ProductResponse>> getLowStockProducts(@RequestHeader("X-Owner-Id") UUID ownerId) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.findLowStockProducts(ownerId));
+    }
 }

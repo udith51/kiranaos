@@ -38,20 +38,20 @@ public class ProductService {
 
     public ProductResponse getProduct(UUID productId, UUID ownerId) {
         Store store = storeService.findStoreByOwnerId(ownerId);
-        Product product = productRepository.findByIdAndStore_Id(productId, store.getId())
+        Product product = productRepository.findByIdAndStore__Id(productId, store.getId())
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
         return toProductResponse(product);
     }
 
     public List<ProductResponse> getProducts(UUID ownerId) {
         Store store = storeService.findStoreByOwnerId(ownerId);
-        List<Product> products = productRepository.findAllByStore_IdAndIsDeletedFalse(store.getId());
+        List<Product> products = productRepository.findAllByStore__IdAndIsDeletedFalse(store.getId());
         return products.stream().map(this::toProductResponse).toList();
     }
 
     public ProductResponse updateProduct(UUID productId, UUID ownerId, UpdateProductRequest request) {
         Store store = storeService.findStoreByOwnerId(ownerId);
-        Product product = productRepository.findByIdAndStore_Id(productId, store.getId())
+        Product product = productRepository.findByIdAndStore__Id(productId, store.getId())
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
         if (request.getName() != null) {
             product.setName(request.getName());
@@ -79,7 +79,7 @@ public class ProductService {
 
     public MessageResponse deleteProduct(UUID productId, UUID ownerId) {
         Store store = storeService.findStoreByOwnerId(ownerId);
-        Product product = productRepository.findByIdAndStore_Id(productId, store.getId())
+        Product product = productRepository.findByIdAndStore__Id(productId, store.getId())
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
         product.setIsDeleted(true);
         productRepository.save(product);
@@ -88,7 +88,13 @@ public class ProductService {
 
     public List<ProductResponse> getProductsByCategory(UUID ownerId, String category) {
         Store store = storeService.findStoreByOwnerId(ownerId);
-        List<Product> products = productRepository.findAllByStore_IdAndCategoryAndIsDeletedFalse(store.getId(), category);
+        List<Product> products = productRepository.findAllByStore__IdAndCategoryAndIsDeletedFalse(store.getId(), category);
+        return products.stream().map(this::toProductResponse).toList();
+    }
+
+    public List<ProductResponse> findLowStockProducts(UUID ownerId){
+        Store store = storeService.findStoreByOwnerId(ownerId);
+        List<Product> products = productRepository.findLowStockProducts(store.getId());
         return products.stream().map(this::toProductResponse).toList();
     }
 

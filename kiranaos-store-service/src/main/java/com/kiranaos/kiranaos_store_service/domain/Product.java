@@ -24,7 +24,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "products")
-@Setter @Getter
+@Setter
+@Getter
 @NoArgsConstructor
 public class Product {
     @Id
@@ -54,7 +55,7 @@ public class Product {
     private BigDecimal reorderThreshold;
 
     @Column(nullable = false)
-    private Boolean isDeleted=false;
+    private Boolean isDeleted = false;
 
     @CreationTimestamp
     private Instant createdAt;
