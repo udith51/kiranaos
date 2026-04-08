@@ -88,6 +88,11 @@ public class StoreService {
         return toReceiptConfigResponse(saved);
     }
 
+    public Store findStoreByOwnerId(UUID ownerId) {
+        return storeRepository.findByOwnerId(ownerId)
+                .orElseThrow(() -> new StoreNotFoundException("Store not found for this owner"));
+    }
+
     private StoreResponse toResponse(Store store) {
         return StoreResponse.builder()
                 .id(store.getId())
