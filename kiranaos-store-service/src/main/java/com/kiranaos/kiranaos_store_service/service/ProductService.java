@@ -92,10 +92,19 @@ public class ProductService {
         return products.stream().map(this::toProductResponse).toList();
     }
 
-    public List<ProductResponse> findLowStockProducts(UUID ownerId){
+    public List<ProductResponse> findLowStockProducts(UUID ownerId) {
         Store store = storeService.findStoreByOwnerId(ownerId);
         List<Product> products = productRepository.findLowStockProducts(store.getId());
         return products.stream().map(this::toProductResponse).toList();
+    }
+
+    public Product findByProductId(UUID productId, UUID storeId) {
+        return productRepository.findByIdAndStoreId(productId, storeId)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+    }
+
+    public void saveProduct(Product product) {
+        productRepository.save(product);
     }
 
     private ProductResponse toProductResponse(Product product) {
