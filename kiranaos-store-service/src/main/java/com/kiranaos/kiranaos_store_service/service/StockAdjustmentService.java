@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -46,6 +47,23 @@ public class StockAdjustmentService {
                         .build());
 
         return toStockAdjustmentResponse(saved);
+    }
+
+    public List<StockAdjustmentResponse> trailForProduct(UUID ownerId, UUID productId){
+        Store store = storeService.findStoreByOwnerId(ownerId);
+        productService.findByProductId(productId, store.getId());
+        return stockAdjustmentRepository.findAllByProductIdOrderByCreatedAtDesc(productId)
+                .stream()
+                .map(this::toStockAdjustmentResponse)
+                .toList();
+    }
+
+    public List<StockAdjustmentResponse> trailForStore(UUID ownerId) {
+        Store store = storeService.findStoreByOwnerId(ownerId);
+        return stockAdjustmentRepository.findAllByStoreIdOrderByCreatedAtDesc(store.getId())
+                .stream()
+                .map(this::toStockAdjustmentResponse)
+                .toList();
     }
 
     private StockAdjustmentResponse toStockAdjustmentResponse(StockAdjustment stockAdjustment) {

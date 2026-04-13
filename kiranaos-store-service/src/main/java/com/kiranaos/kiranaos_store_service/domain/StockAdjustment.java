@@ -33,6 +33,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class StockAdjustment {
 
+    private static final int QUANTITY_PRECISION = 10;
+    private static final int QUANTITY_SCALE = 3;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -44,11 +47,14 @@ public class StockAdjustment {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Column(name = "product_id", insertable = false, updatable = false)
+    private UUID productId;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "adjustment_type", nullable = false)
     private AdjustmentType adjustmentType;
 
-    @Column(name = "quantity_change", precision = 10, scale = 3, nullable = false)
+    @Column(name = "quantity_change", precision = QUANTITY_PRECISION, scale = QUANTITY_SCALE, nullable = false)
     private BigDecimal quantityChange;
 
     private String reason;
