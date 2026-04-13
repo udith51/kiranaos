@@ -42,8 +42,10 @@ public class Product {
     @Column(name = "store_id", insertable = false, updatable = false)
     private UUID storeId;
 
+    @Column(nullable = false)
     private String category;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UnitType unit;
 

@@ -11,7 +11,9 @@ import java.math.BigDecimal;
 public class CreateProductRequest {
     @NotBlank
     private String name;
+    @NotBlank
     private String category;
+    @NotBlank
     private UnitType unit;
     @NotNull
     private BigDecimal price;

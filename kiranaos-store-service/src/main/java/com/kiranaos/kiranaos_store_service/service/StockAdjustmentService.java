@@ -37,45 +37,23 @@ public class StockAdjustmentService {
         }
         productService.saveProduct(product);
 
-        StockAdjustment saved = stockAdjustmentRepository.save(
-                StockAdjustment.builder()
-                        .storeId(store.getId())
-                        .product(product)
-                        .adjustmentType(request.getAdjustmentType())
-                        .quantityChange(request.getQuantityChange())
-                        .reason(request.getReason())
-                        .build());
+        StockAdjustment saved = stockAdjustmentRepository.save(StockAdjustment.builder().storeId(store.getId()).product(product).adjustmentType(request.getAdjustmentType()).quantityChange(request.getQuantityChange()).reason(request.getReason()).build());
 
         return toStockAdjustmentResponse(saved);
     }
 
-    public List<StockAdjustmentResponse> trailForProduct(UUID ownerId, UUID productId){
+    public List<StockAdjustmentResponse> trailForProduct(UUID ownerId, UUID productId) {
         Store store = storeService.findStoreByOwnerId(ownerId);
         productService.findByProductId(productId, store.getId());
-        return stockAdjustmentRepository.findAllByProductIdOrderByCreatedAtDesc(productId)
-                .stream()
-                .map(this::toStockAdjustmentResponse)
-                .toList();
+        return stockAdjustmentRepository.findAllByProductIdOrderByCreatedAtDesc(productId).stream().map(this::toStockAdjustmentResponse).toList();
     }
 
     public List<StockAdjustmentResponse> trailForStore(UUID ownerId) {
         Store store = storeService.findStoreByOwnerId(ownerId);
-        return stockAdjustmentRepository.findAllByStoreIdOrderByCreatedAtDesc(store.getId())
-                .stream()
-                .map(this::toStockAdjustmentResponse)
-                .toList();
+        return stockAdjustmentRepository.findAllByStoreIdOrderByCreatedAtDesc(store.getId()).stream().map(this::toStockAdjustmentResponse).toList();
     }
 
     private StockAdjustmentResponse toStockAdjustmentResponse(StockAdjustment stockAdjustment) {
-        return StockAdjustmentResponse.builder()
-                .id(stockAdjustment.getId())
-                .storeId(stockAdjustment.getStoreId())
-                .productId(stockAdjustment.getProduct().getId())
-                .productName(stockAdjustment.getProduct().getName())
-                .adjustmentType(stockAdjustment.getAdjustmentType())
-                .reason(stockAdjustment.getReason())
-                .quantityChange(stockAdjustment.getQuantityChange())
-                .createdAt(stockAdjustment.getCreatedAt())
-                .build();
+        return StockAdjustmentResponse.builder().id(stockAdjustment.getId()).storeId(stockAdjustment.getStoreId()).productId(stockAdjustment.getProduct().getId()).productName(stockAdjustment.getProduct().getName()).adjustmentType(stockAdjustment.getAdjustmentType()).reason(stockAdjustment.getReason()).quantityChange(stockAdjustment.getQuantityChange()).createdAt(stockAdjustment.getCreatedAt()).build();
     }
 }

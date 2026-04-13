@@ -33,6 +33,11 @@ public class GlobalExceptionHandler {
         return buildError(HttpStatus.CONFLICT, e.getMessage());
     }
 
+    @ExceptionHandler(CsvProcessingException.class)
+    public ResponseEntity<Map<String, Object>> csvProcessingException(InsufficientStockException e) {
+        return buildError(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationError(MethodArgumentNotValidException ex) {
         Map<String, Object> errors = new HashMap<>();

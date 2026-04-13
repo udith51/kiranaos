@@ -1,4 +1,4 @@
-package com.kiranaos.kiranaos_store_service;
+package com.kiranaos.kiranaos_store_service.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().permitAll());
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .anyRequest()
+                        .permitAll());
         return http.build();
     }
 }
