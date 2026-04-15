@@ -57,7 +57,7 @@ jobs:
           - kiranaos-discovery
           - kiranaos-gateway
           - kiranaos-auth-service
-#          - kiranaos-store-service
+          - kiranaos-store-service
 #          - kiranaos-billing-service
 #          - kiranaos-analytics-service
 
