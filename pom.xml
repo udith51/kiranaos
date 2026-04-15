@@ -22,6 +22,7 @@
         <module>kiranaos-gateway</module>
         <module>kiranaos-auth-service</module>
         <module>kiranaos-store-service</module>
+        <module>kiranaos-billing-service</module>
 
     </modules>
     <properties>

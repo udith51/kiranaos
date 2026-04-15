@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+
+    <!-- File-level checks -->
+    <module name="NewlineAtEndOfFile"/>
+    <module name="FileLength">
+        <property name="max" value="500"/>
+    </module>
+
+    <module name="TreeWalker">
+
+        <!-- Imports -->
+        <module name="UnusedImports"/>
+        <module name="AvoidStarImport"/>          <!-- no java.util.* -->
+
+        <!-- Naming conventions -->
+        <module name="TypeName"/>                  <!-- classes: PascalCase -->
+        <module name="MethodName"/>                <!-- methods: camelCase -->
+        <module name="LocalVariableName"/>
+        <module name="ConstantName"/>              <!-- constants: UPPER_SNAKE -->
+
+        <!-- Code quality -->
+        <module name="EqualsHashCode"/>            <!-- override both or neither -->
+        <module name="NeedBraces"/>                <!-- always use {} on if/else -->
+        <module name="EmptyBlock"/>                <!-- no empty catch blocks -->
+        <module name="MagicNumber">
+            <property name="ignoreNumbers" value="-1, 0, 1, 2"/>
+        </module>
+
+        <!-- Complexity -->
+        <module name="MethodLength">
+            <property name="max" value="50"/>      <!-- keep methods short -->
+        </module>
+        <module name="ParameterNumber">
+            <property name="max" value="7"/>
+        </module>
+
+        <!-- Whitespace -->
+        <module name="WhitespaceAround"/>
+
+    </module>
+
+</module>
