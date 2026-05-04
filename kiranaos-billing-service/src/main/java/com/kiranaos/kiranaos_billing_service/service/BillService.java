@@ -5,13 +5,14 @@ import com.kiranaos.kiranaos_billing_service.domain.Bill;
 import com.kiranaos.kiranaos_billing_service.domain.BillItem;
 import com.kiranaos.kiranaos_billing_service.dto.request.BillItemRequest;
 import com.kiranaos.kiranaos_billing_service.dto.request.CreateBillRequest;
-import com.kiranaos.kiranaos_billing_service.dto.response.BillItemResponse;
-import com.kiranaos.kiranaos_billing_service.dto.response.BillResponse;
-import com.kiranaos.kiranaos_billing_service.dto.response.ProductResponse;
-import com.kiranaos.kiranaos_billing_service.dto.response.StoreResponse;
+import com.kiranaos.kiranaos_billing_service.dto.response.*;
 import com.kiranaos.kiranaos_billing_service.exception.StoreNotFoundException;
 import com.kiranaos.kiranaos_billing_service.repository.BillRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,16 @@ import java.util.UUID;
 public class BillService {
     private final BillRepository billRepository;
     private final StoreServiceClient storeServiceClient;
+
+    public Page<BillSummaryResponse> getBills(UUID ownerId, int page, int size){
+        StoreResponse store=storeServiceClient.getStore(ownerId);
+        if(store==null){
+            throw new StoreNotFoundException("Store not found");
+        }
+        Pageable pageable= PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Bill> bills=billRepository.findAllByStoreId(store.getId(), pageable);
+        return bills.map(this::toBillSummaryResponse);
+    }
 
     @Transactional
     public BillResponse createBill(CreateBillRequest createBillRequest, UUID ownerId) {
@@ -107,6 +118,20 @@ public class BillService {
                 .unitPrice(billItem.getUnitPrice())
                 .gstRate(billItem.getGstRate())
                 .itemTotal(billItem.getItemTotal())
+                .build();
+    }
+
+    private BillSummaryResponse toBillSummaryResponse(Bill bill) {
+        return BillSummaryResponse.builder()
+                .id(bill.getId())
+                .billNumber(bill.getBillNumber())
+                .customerName(bill.getCustomerName())
+                .customerPhone(bill.getCustomerPhone())
+                .subTotal(bill.getSubTotal())
+                .gstTotal(bill.getGstTotal())
+                .grandTotal(bill.getGrandTotal())
+                .whatsappStatus(bill.getWhatsappStatus())
+                .createdAt(bill.getCreatedAt())
                 .build();
     }
 }
