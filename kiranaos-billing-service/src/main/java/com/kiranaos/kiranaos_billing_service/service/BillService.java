@@ -5,7 +5,13 @@ import com.kiranaos.kiranaos_billing_service.domain.Bill;
 import com.kiranaos.kiranaos_billing_service.domain.BillItem;
 import com.kiranaos.kiranaos_billing_service.dto.request.BillItemRequest;
 import com.kiranaos.kiranaos_billing_service.dto.request.CreateBillRequest;
-import com.kiranaos.kiranaos_billing_service.dto.response.*;
+import com.kiranaos.kiranaos_billing_service.dto.response.BillResponse;
+import com.kiranaos.kiranaos_billing_service.dto.response.BillSummaryResponse;
+import com.kiranaos.kiranaos_billing_service.dto.response.StoreResponse;
+import com.kiranaos.kiranaos_billing_service.dto.response.ProductResponse;
+import com.kiranaos.kiranaos_billing_service.dto.response.BillItemResponse;
+import com.kiranaos.kiranaos_billing_service.exception.AccessDeniedException;
+import com.kiranaos.kiranaos_billing_service.exception.BillNotFoundException;
 import com.kiranaos.kiranaos_billing_service.exception.StoreNotFoundException;
 import com.kiranaos.kiranaos_billing_service.repository.BillRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +41,20 @@ public class BillService {
         Pageable pageable= PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Bill> bills=billRepository.findAllByStoreId(store.getId(), pageable);
         return bills.map(this::toBillSummaryResponse);
+    }
+
+    public BillResponse getBillById(UUID ownerId, UUID billId){
+        StoreResponse store=storeServiceClient.getStore(ownerId);
+        if(store==null){
+            throw new StoreNotFoundException("Store not found");
+        }
+        Bill bill=billRepository.findById(billId)
+                .orElseThrow(()->new BillNotFoundException("No such bill exists"));
+
+        if(!bill.getStoreId().equals(store.getId())){
+            throw new AccessDeniedException("Access denied");
+        }
+        return toBillResponse(bill);
     }
 
     @Transactional

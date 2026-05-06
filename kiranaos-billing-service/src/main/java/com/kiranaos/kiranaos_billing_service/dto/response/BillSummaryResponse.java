@@ -1,7 +1,11 @@
 package com.kiranaos.kiranaos_billing_service.dto.response;
 
 import com.kiranaos.kiranaos_billing_service.domain.enums.WhatsappStatus;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.Instant;
