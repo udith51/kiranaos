@@ -30,9 +30,7 @@ api.interceptors.response.use(
               refreshToken,
             },
           );
-          useAuthStore
-            .getState()
-            .setAuth(data.user, data.accessToken, data.refreshToken);
+          useAuthStore.getState().setAuth(data.accessToken, data.refreshToken);
           originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
           return api(originalRequest);
         }

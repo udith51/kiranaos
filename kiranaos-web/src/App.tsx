@@ -9,18 +9,20 @@ import Bills from '@/pages/Bills';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/billing" element={<Billing />} />
-          <Route path="/inventory" element={<Inventory />} />
-          <Route path="/bills" element={<Bills />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <div className="min-h-screen">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/billing" element={<Billing />} />
+            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/bills" element={<Bills />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 
