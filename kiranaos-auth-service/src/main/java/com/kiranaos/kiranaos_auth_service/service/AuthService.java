@@ -30,7 +30,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final JwtProperties jwtProperties;
 
-    public MessageResponse register(RegisterRequest registerRequest) {
+    public AuthResponse register(RegisterRequest registerRequest) {
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
             throw new EmailAlreadyExistsException("Email already exists");
         }
@@ -38,7 +38,7 @@ public class AuthService {
         user.setEmail(registerRequest.getEmail());
         user.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
         userRepository.save(user);
-        return new MessageResponse("Registration successful");
+        return generateTokenPair(user);
     }
 
     public AuthResponse login(LoginRequest loginRequest) {
@@ -63,6 +63,7 @@ public class AuthService {
         refreshTokenRepository.save(refreshToken);
 
         return AuthResponse.builder()
+                .userId(user.getId())
                 .accessToken(accessToken)
                 .refreshToken(rawRefreshToken)
                 .build();

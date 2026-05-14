@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
 
 const loginSchema = z.object({
   email: z.email(),
@@ -28,7 +29,7 @@ export default function Login() {
     register,
     formState: { errors },
   } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
-  const { mutate: loginMutate } = useLogin(() => navigate('/'));
+  const { mutate: loginMutate, isPending } = useLogin(() => navigate('/'));
 
   const onSubmit = (data: LoginFormData) => {
     loginMutate(data);
@@ -69,8 +70,8 @@ export default function Login() {
                 </p>
               )}
             </div>
-            <Button type="submit" className="w-full">
-              Login
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? <Spinner /> : 'Login'}
             </Button>
             <p className="text-center text-sm text-gray-500">
               Don't have an account?{' '}

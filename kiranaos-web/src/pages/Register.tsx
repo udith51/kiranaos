@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
 
 const registerSchema = z
   .object({
@@ -34,7 +35,9 @@ export default function Register() {
     register,
     formState: { errors },
   } = useForm<RegisterFormData>({ resolver: zodResolver(registerSchema) });
-  const { mutate: registerMutate } = useRegister(() => navigate('/'));
+  const { mutate: registerMutate, isPending } = useRegister(() =>
+    navigate('/'),
+  );
 
   const onSubmit = (data: RegisterFormData) => {
     const { confirmPassword: _, ...request } = data;
@@ -90,9 +93,10 @@ export default function Register() {
                 </p>
               )}
             </div>
-            <Button type="submit" className="w-full">
-              Register
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? <Spinner /> : 'Register'}
             </Button>
+
             <p className="text-center text-sm text-gray-500">
               Already have an account?{' '}
               <Link

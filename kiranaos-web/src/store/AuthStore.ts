@@ -1,37 +1,30 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface AuthUser {
-  id: string;
-  email: string;
-}
-
 interface AuthState {
-  user: AuthUser | null;
+  userId: string | null;
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
 }
 
 interface AuthActions {
-  setAuth: (accessToken: string, refreshToken: string) => void;
-  setUser: (user: AuthUser) => void;
+  setAuth: (userId: string, accessToken: string, refreshToken: string) => void;
   clearAuth: () => void;
 }
 
 export const useAuthStore = create<AuthState & AuthActions>()(
   persist(
     (set) => ({
-      user: null,
+      userId: null,
       accessToken: null,
       refreshToken: null,
       isAuthenticated: false,
-      setAuth: (accessToken, refreshToken) =>
-        set({ accessToken, refreshToken, isAuthenticated: true }),
-      setUser: (user) => set({ user }),
+      setAuth: (userId, accessToken, refreshToken) =>
+        set({ userId, accessToken, refreshToken, isAuthenticated: true }),
       clearAuth: () =>
         set({
-          user: null,
+          userId: null,
           accessToken: null,
           refreshToken: null,
           isAuthenticated: false,
@@ -40,7 +33,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
     {
       name: 'kiranaos-auth',
       partialize: (state) => ({
-        user: state.user,
+        userId: state.userId,
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,

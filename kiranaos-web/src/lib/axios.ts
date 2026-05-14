@@ -10,7 +10,8 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const accessToken = useAuthStore.getState().accessToken;
+  const { userId, accessToken } = useAuthStore.getState();
+  if (userId) config.headers['X-Owner-Id'] = userId;
   if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
   return config;
 });
@@ -30,7 +31,9 @@ api.interceptors.response.use(
               refreshToken,
             },
           );
-          useAuthStore.getState().setAuth(data.accessToken, data.refreshToken);
+          useAuthStore
+            .getState()
+            .setAuth(data.userId, data.accessToken, data.refreshToken);
           originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
           return api(originalRequest);
         }
