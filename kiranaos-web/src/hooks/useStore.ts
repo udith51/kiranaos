@@ -23,8 +23,15 @@ export const useCreateStore = (onSuccess?: () => void) => {
   });
 };
 
-export const useUpdateStore = () => {
+export const useUpdateStore = (onSuccess?: () => void) => {
   return useMutation({
     mutationFn: updateStore,
+    onSuccess: () => {
+      toast.success('Store updated successfully');
+      onSuccess?.();
+    },
+    onError: () => {
+      toast.error('Failed to update store');
+    },
   });
 };

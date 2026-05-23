@@ -1,75 +1,55 @@
-# React + TypeScript + Vite
+## Frontend Progress
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Foundation
 
-Currently, two official plugins are available:
+- [x] Project setup — Vite, Tailwind, shadcn
+- [x] env.ts, axios.ts, queryClient.ts
+- [x] authStore.ts — Zustand
+- [x] ProtectedRoute, StoreGuard
+- [x] App.tsx — routing
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Auth
 
-## React Compiler
+- [x] types/auth.ts, api/auth.ts, hooks/useAuth.ts
+- [x] Login page
+- [x] Register page
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Store
 
-Note: This will impact Vite dev & build performances.
+- [x] types/store.ts, api/store.ts, hooks/useStore.ts
+- [x] StoreSetup page
+- [ ] Store Settings page
 
-## Expanding the ESLint configuration
+### App Shell
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- [x] AppLayout — sidebar + topbar
+- [x] Sidebar navigation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Products / Inventory
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- [ ] types, api, hooks
+- [ ] Products list page
+- [ ] Add/Edit product
+- [ ] Stock adjustment
+- [ ] Low stock view
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+### Billing
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- [ ] types, api, hooks
+- [ ] Billing screen
+- [ ] Bill generated — PDF view
+- [ ] Bills history page
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+### Analytics
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+- [ ] types, api, hooks
+- [ ] Dashboard — metric cards, charts
+- [ ] Product analytics
+- [ ] Billing behaviour
+- [ ] Inventory health
+
+### Misc
+
+- [ ] Receipt config page
+- [ ] Error boundaries
+- [ ] Loading skeletons
