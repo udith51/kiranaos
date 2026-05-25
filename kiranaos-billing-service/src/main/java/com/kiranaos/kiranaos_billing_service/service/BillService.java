@@ -30,28 +30,28 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class BillService {
+    public static final int VAL = 100;
     private final BillRepository billRepository;
     private final StoreServiceClient storeServiceClient;
 
-    public Page<BillSummaryResponse> getBills(UUID ownerId, int page, int size){
-        StoreResponse store=storeServiceClient.getStore(ownerId);
-        if(store==null){
+    public Page<BillSummaryResponse> getBills(UUID ownerId, int page, int size) {
+        StoreResponse store = storeServiceClient.getStore(ownerId);
+        if (store == null) {
             throw new StoreNotFoundException("Store not found");
         }
-        Pageable pageable= PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Bill> bills=billRepository.findAllByStoreId(store.getId(), pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Bill> bills = billRepository.findAllByStoreId(store.getId(), pageable);
         return bills.map(this::toBillSummaryResponse);
     }
 
-    public BillResponse getBillById(UUID ownerId, UUID billId){
-        StoreResponse store=storeServiceClient.getStore(ownerId);
-        if(store==null){
+    public BillResponse getBillById(UUID ownerId, UUID billId) {
+        StoreResponse store = storeServiceClient.getStore(ownerId);
+        if (store == null) {
             throw new StoreNotFoundException("Store not found");
         }
-        Bill bill=billRepository.findById(billId)
-                .orElseThrow(()->new BillNotFoundException("No such bill exists"));
+        Bill bill = billRepository.findById(billId).orElseThrow(() -> new BillNotFoundException("No such bill exists"));
 
-        if(!bill.getStoreId().equals(store.getId())){
+        if (!bill.getStoreId().equals(store.getId())) {
             throw new AccessDeniedException("Access denied");
         }
         return toBillResponse(bill);
@@ -59,8 +59,8 @@ public class BillService {
 
     @Transactional
     public BillResponse createBill(CreateBillRequest createBillRequest, UUID ownerId) {
-        StoreResponse store=storeServiceClient.getStore(ownerId);
-        if(!store.getId().equals(createBillRequest.getStoreId()))
+        StoreResponse store = storeServiceClient.getStore(ownerId);
+        if (!store.getId().equals(createBillRequest.getStoreId()))
             throw new StoreNotFoundException("No such store exists");
 
         int billNumber = billRepository.countByStoreId(createBillRequest.getStoreId()) + 1;
@@ -71,18 +71,11 @@ public class BillService {
         bill.setCustomerName(createBillRequest.getCustomerName());
         bill.setCustomerPhone(createBillRequest.getCustomerPhone());
 
-        List<BillItem> billItems = createBillRequest.getItems()
-                .stream()
-                .map(item -> toBillItem(item, bill, ownerId))
-                .toList();
+        List<BillItem> billItems = createBillRequest.getItems().stream().map(item -> toBillItem(item, bill, ownerId)).toList();
         bill.setItems(billItems);
 
-        BigDecimal subTotal=billItems.stream()
-                .map(item->item.getUnitPrice().multiply(item.getQuantity()))
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal gstTotal=billItems.stream()
-                .map(item->item.getQuantity().multiply(item.getUnitPrice()).multiply(item.getGstRate().divide(BigDecimal.valueOf(100),2,RoundingMode.HALF_UP)))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal subTotal = billItems.stream().map(item -> item.getUnitPrice().multiply(item.getQuantity())).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal gstTotal = billItems.stream().map(item -> item.getQuantity().multiply(item.getUnitPrice()).multiply(item.getGstRate().divide(BigDecimal.valueOf(VAL), 2, RoundingMode.HALF_UP))).reduce(BigDecimal.ZERO, BigDecimal::add);
         bill.setSubTotal(subTotal);
         bill.setGstTotal(gstTotal);
         bill.setGrandTotal(subTotal.add(gstTotal));
@@ -104,7 +97,7 @@ public class BillService {
     }
 
     private BigDecimal calculateTotalAmt(BigDecimal quantity, BigDecimal unitPrice, BigDecimal gstRate) {
-        BigDecimal gstMultiplier = BigDecimal.ONE.add(gstRate.divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+        BigDecimal gstMultiplier = BigDecimal.ONE.add(gstRate.divide(BigDecimal.valueOf(VAL), 2, RoundingMode.HALF_UP));
         return quantity.multiply(unitPrice).multiply(gstMultiplier);
     }
 
@@ -115,10 +108,7 @@ public class BillService {
         response.setBillNumber(bill.getBillNumber());
         response.setCustomerName(bill.getCustomerName());
         response.setCustomerPhone(bill.getCustomerPhone());
-        response.setItems(bill.getItems()
-                .stream()
-                .map(this::toBillItemResponse)
-                .toList());
+        response.setItems(bill.getItems().stream().map(this::toBillItemResponse).toList());
         response.setSubTotal(bill.getSubTotal());
         response.setGstTotal(bill.getGstTotal());
         response.setGrandTotal(bill.getGrandTotal());
@@ -129,29 +119,10 @@ public class BillService {
     }
 
     private BillItemResponse toBillItemResponse(BillItem billItem) {
-        return BillItemResponse.builder()
-                .id(billItem.getId())
-                .productId(billItem.getProductId())
-                .productName(billItem.getProductName())
-                .quantity(billItem.getQuantity())
-                .unitType(billItem.getUnitType())
-                .unitPrice(billItem.getUnitPrice())
-                .gstRate(billItem.getGstRate())
-                .itemTotal(billItem.getItemTotal())
-                .build();
+        return BillItemResponse.builder().id(billItem.getId()).productId(billItem.getProductId()).productName(billItem.getProductName()).quantity(billItem.getQuantity()).unitType(billItem.getUnitType()).unitPrice(billItem.getUnitPrice()).gstRate(billItem.getGstRate()).itemTotal(billItem.getItemTotal()).build();
     }
 
     private BillSummaryResponse toBillSummaryResponse(Bill bill) {
-        return BillSummaryResponse.builder()
-                .id(bill.getId())
-                .billNumber(bill.getBillNumber())
-                .customerName(bill.getCustomerName())
-                .customerPhone(bill.getCustomerPhone())
-                .subTotal(bill.getSubTotal())
-                .gstTotal(bill.getGstTotal())
-                .grandTotal(bill.getGrandTotal())
-                .whatsappStatus(bill.getWhatsappStatus())
-                .createdAt(bill.getCreatedAt())
-                .build();
+        return BillSummaryResponse.builder().id(bill.getId()).billNumber(bill.getBillNumber()).customerName(bill.getCustomerName()).customerPhone(bill.getCustomerPhone()).subTotal(bill.getSubTotal()).gstTotal(bill.getGstTotal()).grandTotal(bill.getGrandTotal()).whatsappStatus(bill.getWhatsappStatus()).createdAt(bill.getCreatedAt()).build();
     }
 }
