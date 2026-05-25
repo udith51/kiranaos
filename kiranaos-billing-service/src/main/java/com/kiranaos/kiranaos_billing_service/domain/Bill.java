@@ -64,7 +64,7 @@ public class Bill {
     private String pdfUrl;
 
     @Enumerated(EnumType.STRING)
-    private WhatsappStatus whatsappStatus=WhatsappStatus.NOT_REQUESTED;
+    private WhatsappStatus whatsappStatus = WhatsappStatus.NOT_REQUESTED;
 
     @CreationTimestamp
     private Instant createdAt;

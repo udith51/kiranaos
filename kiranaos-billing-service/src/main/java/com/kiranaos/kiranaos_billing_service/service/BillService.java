@@ -60,8 +60,9 @@ public class BillService {
     @Transactional
     public BillResponse createBill(CreateBillRequest createBillRequest, UUID ownerId) {
         StoreResponse store = storeServiceClient.getStore(ownerId);
-        if (!store.getId().equals(createBillRequest.getStoreId()))
+        if (!store.getId().equals(createBillRequest.getStoreId())) {
             throw new StoreNotFoundException("No such store exists");
+        }
 
         int billNumber = billRepository.countByStoreId(createBillRequest.getStoreId()) + 1;
 

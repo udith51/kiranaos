@@ -27,21 +27,17 @@ public class BillController {
     private final BillService billService;
 
     @PostMapping
-    public ResponseEntity<BillResponse> createBill(@RequestHeader("X-Owner-Id")UUID ownerId,
-                                                   @Valid @RequestBody CreateBillRequest request){
-        return ResponseEntity.status(HttpStatus.CREATED).body(billService.createBill(request,ownerId));
+    public ResponseEntity<BillResponse> createBill(@RequestHeader("X-Owner-Id") UUID ownerId, @Valid @RequestBody CreateBillRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(billService.createBill(request, ownerId));
     }
 
     @GetMapping
-    public ResponseEntity<Page<BillSummaryResponse>> getAllBills(@RequestHeader("X-Owner-Id")UUID ownerId,
-                                                                 @RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "10") int size){
-        return ResponseEntity.status(HttpStatus.OK).body(billService.getBills(ownerId,page,size));
+    public ResponseEntity<Page<BillSummaryResponse>> getAllBills(@RequestHeader("X-Owner-Id") UUID ownerId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.status(HttpStatus.OK).body(billService.getBills(ownerId, page, size));
     }
 
     @GetMapping("/{billId}")
-    public ResponseEntity<BillResponse> getBill(@RequestHeader("X-Owner-Id")UUID ownerId,
-                                                @PathVariable("billId") UUID billId){
-        return ResponseEntity.status(HttpStatus.OK).body(billService.getBillById(ownerId,billId));
+    public ResponseEntity<BillResponse> getBill(@RequestHeader("X-Owner-Id") UUID ownerId, @PathVariable("billId") UUID billId) {
+        return ResponseEntity.status(HttpStatus.OK).body(billService.getBillById(ownerId, billId));
     }
 }
