@@ -22,15 +22,22 @@ import { useAuthStore } from '@/store/AuthStore';
 import { LogOut, Settings, Store } from 'lucide-react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { navSections } from '@/config/navigation';
+import { useLogout } from '@/hooks/useAuth';
 
 export default function AppSidebar() {
   const { data: store } = useGetStore();
   const navigate = useNavigate();
   const location = useLocation();
-  const { clearAuth } = useAuthStore();
-  const handleLogout = () => {
-    clearAuth();
+  const { mutate: logout } = useLogout(() => {
     navigate('/login', { replace: true });
+  });
+  const { refreshToken } = useAuthStore();
+  const handleLogout = () => {
+    if (!refreshToken) {
+      return;
+    }
+
+    logout({ refreshToken });
   };
   return (
     <Sidebar>
@@ -77,7 +84,7 @@ export default function AppSidebar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-60" align="start">
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => navigate('/store/settings')}>
+              <DropdownMenuItem onClick={() => navigate('/store/setup')}>
                 <Settings /> Store
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>

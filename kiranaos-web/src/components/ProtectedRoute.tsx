@@ -6,7 +6,7 @@ function ProtectedRoute() {
   // TODO
   return (
     <>
-      {isAuthenticated == isAuthenticated ? (
+      {isAuthenticated == true ? (
         <Outlet />
       ) : (
         <Navigate to="/login" replace={true} />
